@@ -32,6 +32,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
@@ -41,6 +42,7 @@ public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
     private final JwtAuthFilter jwtAuthFilter;
+    private final CorsAllowedOrigins corsAllowedOrigins;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -67,7 +69,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:4200", "http://localhost:5173"));
+        configuration.setAllowedOrigins(corsAllowedOrigins.list());
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With"));
         configuration.setAllowCredentials(true);
@@ -121,6 +123,22 @@ public class SecurityConfig {
                 }
             }
             filterChain.doFilter(request, response);
+        }
+    }
+
+    @Component
+    static class CorsAllowedOrigins {
+        private final List<String> allowed;
+
+        CorsAllowedOrigins(@org.springframework.beans.factory.annotation.Value("${cors.allowed-origins:http://localhost:3000,http://localhost:4200,http://localhost:5173}") String origins) {
+            this.allowed = Arrays.stream(origins.split(","))
+                    .map(String::trim)
+                    .filter(s -> !s.isBlank())
+                    .collect(Collectors.toList());
+        }
+
+        List<String> list() {
+            return allowed;
         }
     }
 }

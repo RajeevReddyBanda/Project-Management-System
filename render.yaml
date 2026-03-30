@@ -6,11 +6,9 @@ databases:
 services:
   - type: web
     name: pms-backend
-    runtime: java
+    runtime: docker
     plan: free
     rootDir: "project-management-system-backend/project-management-system-backend"
-    buildCommand: "chmod +x mvnw && ./mvnw -DskipTests package"
-    startCommand: "java -jar target/project-management-system-backend-0.0.1-SNAPSHOT.jar"
     envVars:
       - key: DATABASE_URL
         fromDatabase:

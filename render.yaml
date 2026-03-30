@@ -21,7 +21,7 @@ services:
       - key: JWT_SECRET
         generateValue: true
 
-  - type: static
+  - type: staticSite
     name: pms-frontend
     rootDir: "project-management-system-frontend/project-management-system-frontend"
     buildCommand: "npm install && npm run build"

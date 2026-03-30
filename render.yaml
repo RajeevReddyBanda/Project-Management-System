@@ -8,24 +8,24 @@ services:
     name: pms-backend
     runtime: java
     plan: free
-    rootDir: project-management-system-backend (2)/project-management-system-backend
-    buildCommand: ./mvnw -DskipTests package
-    startCommand: java -jar target/project-management-system-backend-0.0.1-SNAPSHOT.jar
+    rootDir: "project-management-system-backend/project-management-system-backend"
+    buildCommand: "chmod +x mvnw && ./mvnw -DskipTests package"
+    startCommand: "java -jar target/project-management-system-backend-0.0.1-SNAPSHOT.jar"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
           name: pms-postgres
           property: connectionString
       - key: CORS_ALLOWED_ORIGINS
-        value: https://pms-frontend.onrender.com
+        value: "https://pms-frontend.onrender.com"
       - key: JWT_SECRET
         generateValue: true
 
   - type: static
     name: pms-frontend
-    rootDir: project-management-system-frontend (1)/project-management-system-frontend
-    buildCommand: npm install && npm run build
+    rootDir: "project-management-system-frontend/project-management-system-frontend"
+    buildCommand: "npm install && npm run build"
     staticPublishPath: dist
     envVars:
       - key: VITE_API_BASE_URL
-        value: https://pms-backend.onrender.com/api
+        value: "https://pms-backend.onrender.com/api"
